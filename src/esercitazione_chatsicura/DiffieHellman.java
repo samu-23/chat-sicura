@@ -48,7 +48,7 @@ public class DiffieHellman {
         int randomGenerator = randomManager.nextInt(2, randomPrimeNumber - 1);
         int a = randomManager.nextInt(2, randomPrimeNumber - 1);
         
-        //int funzA = Math.pow(randomGenerator, a) % primeNumber;
+        int funzA = (int) (Math.pow(randomGenerator, a) % primeNumber);
 
         
     }

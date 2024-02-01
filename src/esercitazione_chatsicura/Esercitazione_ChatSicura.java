@@ -4,6 +4,7 @@
  */
 package esercitazione_chatsicura;
 
+import esercitazione_chatsicura.grafica.*;
 
 /**
  *
@@ -11,26 +12,12 @@ package esercitazione_chatsicura;
  */
 public class Esercitazione_ChatSicura {
 
-    /*private static String getCurrentProjectPath() {
-        // Ottieni il progetto corrente dal Lookup
-        Project currentProject = Lookup.getDefault().lookup(Project.class);
-
-        if (currentProject != null) {
-            // Ottieni il percorso del progetto
-            String projectPath = currentProject.getProjectDirectory().getPath();
-            return projectPath;
-        } else {
-            System.out.println("Nessun progetto corrente trovato.");
-            return null;
-        }
-    }*/
-    // Mannaggia cristo
-    
+   
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        InterfacciaScelta is = new InterfacciaScelta("Prova");
     }
     
 }
