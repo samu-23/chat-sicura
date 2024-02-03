@@ -21,6 +21,7 @@ public class InterfacciaClient extends JFrame implements ActionListener {
     private JTextField ipTextField = new JTextField();
     private JLabel portLabel = new JLabel("Porta:");
     private JTextField portTextField = new JTextField();
+    private JButton connectButton = new JButton("Connettiti");
     
     public InterfacciaClient(String title) {
         
@@ -33,6 +34,8 @@ public class InterfacciaClient extends JFrame implements ActionListener {
         ipTextField.setPreferredSize(new Dimension(100,25));
         portTextField.setPreferredSize(new Dimension(100,25));
         
+        connectButton.addActionListener(this);
+        
         // Aggiunta pannelli e componenti
         
         ipPanel.add(ipLabel);
@@ -40,6 +43,8 @@ public class InterfacciaClient extends JFrame implements ActionListener {
         ipPanel.add(Box.createRigidArea(new Dimension(100,0)));
         ipPanel.add(portLabel);
         ipPanel.add(portTextField);
+        ipPanel.add(Box.createRigidArea(new Dimension(20,0)));
+        ipPanel.add(connectButton);
         
         container.add(ipPanel, BorderLayout.NORTH);
         
@@ -49,6 +54,10 @@ public class InterfacciaClient extends JFrame implements ActionListener {
     
     @Override
     public void actionPerformed(ActionEvent e) {
+        
+        if (e.getSource() == connectButton) {
+            // Connettiti alla socket Server
+        }
         
     }
     

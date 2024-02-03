@@ -38,18 +38,49 @@ public class DiffieHellman {
         return lines;
     }
     
-    public void initializeValues() {
+    public int clientValues() {
+        
+        /*
+        * p - Pubblico
+        * g - Pubblico
+        * a - Privato
+        * KA - Privato
+        */
         
         Random randomManager = new Random();
         
         int randomPrimeNumber = randomManager.nextInt(0, primeNumbersList.size());
-        int primeNumber = Integer.parseInt(primeNumbersList.get(randomPrimeNumber));
+        int p = Integer.parseInt(primeNumbersList.get(randomPrimeNumber));
         
-        int randomGenerator = randomManager.nextInt(2, randomPrimeNumber - 1);
+        int g = randomManager.nextInt(2, randomPrimeNumber - 1);
         int a = randomManager.nextInt(2, randomPrimeNumber - 1);
         
-        int funzA = (int) (Math.pow(randomGenerator, a) % primeNumber);
-
+        int KA = (int) (Math.pow(g, a) % p);
+        
+        return KA;
+        
+    }
+    
+    public int serverValues() {
+        
+        /*
+        * p - Pubblico
+        * g - Pubblico
+        * b - Privato
+        * KA - Privato
+        */
+        
+        Random randomManager = new Random();
+        
+        int randomPrimeNumber = randomManager.nextInt(0, primeNumbersList.size());
+        int p = Integer.parseInt(primeNumbersList.get(randomPrimeNumber));
+        
+        int g = randomManager.nextInt(2, randomPrimeNumber - 1);
+        int b = randomManager.nextInt(2, randomPrimeNumber - 1);
+        
+        int KB = (int) (Math.pow(g, b) % p);
+        
+        return KB;
         
     }
     
