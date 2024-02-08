@@ -11,35 +11,25 @@ import java.io.*;
  *
  * @author acer
  */
-public class ServerHandler implements Runnable{
-    private Socket socketClient;
+public class ServerHandler{
+
+    private ServerSocket serverSocket;
+    private int serverPort;
     
-    public ServerHandler(Socket socketClient){
-        this.socketClient = socketClient;
+    public ServerHandler(int port) {
+        serverPort = port;
     }
     
-    public void run() {
+    public void openConnection() {
         
-        try{
-        
-            BufferedReader in = new BufferedReader(new InputStreamReader(socketClient.getInputStream()));
-            PrintWriter out = new PrintWriter(socketClient.getOutputStream(), true);
-            String dataClient = in.readLine();
-            System.out.println("Client: " + dataClient);
-       
+        //serverThread = new Thread(initializeThread());
+
+        try {
+            serverSocket = new ServerSocket(serverPort);
+        } catch (Exception ex) {
             
-            //socketClient.close();
-        
-        } catch (IOException e){
-        
-            e.printStackTrace();
         }
-    
-    
-    
-    
-    
     }
-
-
+    
+   
 }
