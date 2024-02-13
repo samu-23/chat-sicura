@@ -24,6 +24,8 @@ public class InterfacciaScelta extends JFrame implements ActionListener {
     private JButton serverButton = new JButton("Server");
     
     public InterfacciaScelta(String title) {
+        
+        setResizable(false);
         setTitle(title);
         
         // Impostazioni pannelli e componenti

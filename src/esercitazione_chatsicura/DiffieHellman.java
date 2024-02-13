@@ -14,8 +14,8 @@ public class DiffieHellman {
     
     private File primeNumbers;
     private List<String> primeNumbersList;
-    private int chiaveA;
-    private int chiaveB;
+    private int primeNumber;
+    private int a;
     
     public DiffieHellman(File primeNumbersFile) {
         primeNumbers = primeNumbersFile;
@@ -50,24 +50,24 @@ public class DiffieHellman {
         Random randomManager = new Random();
         
         int randomPrimeNumber = randomManager.nextInt(0, primeNumbersList.size());
-        int p = Integer.parseInt(primeNumbersList.get(randomPrimeNumber));
+        primeNumber = Integer.parseInt(primeNumbersList.get(randomPrimeNumber));
         
         int g = randomManager.nextInt(2, randomPrimeNumber - 1);
-        int a = randomManager.nextInt(2, randomPrimeNumber - 1);
+        a = randomManager.nextInt(2, randomPrimeNumber - 1);
         
-        int KA = (int) (Math.pow(g, a) % p);
+        int KA = (int) (Math.pow(g, a) % primeNumber);
         
         return KA;
         
     }
     
-    public int serverValues() {
+    public int serverValues(int KA) {
         
         /*
         * p - Pubblico
-        * g - Pubblico
         * b - Privato
         * KA - Privato
+        * KB - Pubblico
         */
         
         Random randomManager = new Random();
@@ -75,21 +75,16 @@ public class DiffieHellman {
         int randomPrimeNumber = randomManager.nextInt(0, primeNumbersList.size());
         int p = Integer.parseInt(primeNumbersList.get(randomPrimeNumber));
         
-        int g = randomManager.nextInt(2, randomPrimeNumber - 1);
         int b = randomManager.nextInt(2, randomPrimeNumber - 1);
         
-        int KB = (int) (Math.pow(g, b) % p);
+        int KB = (int) (Math.pow(KA, b) % p);
         
         return KB;
         
     }
     
-    public int getChiaveA() {
-        return chiaveA;
-    }
-    
-    public int getChiaveB() {
-        return chiaveB;
+    public int clientEndValues(int KB) {
+        return (int) (Math.pow(KB, a) % primeNumber); 
     }
     
 }

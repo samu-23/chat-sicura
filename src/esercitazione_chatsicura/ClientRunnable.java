@@ -4,26 +4,27 @@
  */
 package esercitazione_chatsicura;
 
-import java.net.*;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.SocketAddress;
+import java.net.Socket;
 
 /**
  *
  * @author acer
  */
-public class ServerRunnable implements Runnable {
+public class ClientRunnable implements Runnable {
 
-    private ServerSocket serverSocket;
     private Socket clientSocket;
-    
     private String ipServer;
     private int portServer;
     
     private InputStream inputStream;
     private OutputStream outputStream;
     
-    
-    public ServerRunnable(int port) {
+    public ClientRunnable(String ip, int port) {
+        ipServer = ip;
         portServer = port;
     }
     
@@ -31,29 +32,16 @@ public class ServerRunnable implements Runnable {
     public void run() {
         try {
             
-            serverSocket = new ServerSocket(portServer);
             
-            System.out.println("CONNESSIONE APERTA");
-            
-            clientSocket = serverSocket.accept();
+            clientSocket = new Socket(ipServer, portServer);
             
             inputStream = clientSocket.getInputStream();
             outputStream = clientSocket.getOutputStream();
             
-            byte[] serverBuffer = new byte[2048];
-            int bytesRead;
-
-            while ((bytesRead = inputStream.read(serverBuffer)) != 1) {
-                String clientMessage =  new String(serverBuffer, 0, bytesRead);
-                print("Client: " + clientMessage);
-                
-                String serverMessage = "Server: ok";
-                outputStream.write(serverMessage.getBytes());
-                outputStream.flush();
-            }
+            System.out.println("CONNESSIONE APERTA");
             
         } catch (Exception ex) {
-            
+            System.out.println("CONNESSIONE FALLITA\n\n" + ex);
         } finally {
             try {
                 if (clientSocket != null && !clientSocket.isClosed()) {
@@ -65,10 +53,6 @@ public class ServerRunnable implements Runnable {
         }
         
         
-    }
-    
-    private void print(String message) {
-        System.out.println(message);
     }
     
 }
