@@ -4,11 +4,10 @@
  */
 package esercitazione_chatsicura;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.SocketAddress;
-import java.net.Socket;
+import java.io.*;
+import java.net.*;
+import java.awt.event.*;
+import javax.swing.*;
 
 /**
  *
@@ -17,15 +16,29 @@ import java.net.Socket;
 public class ClientRunnable implements Runnable {
 
     private Socket clientSocket;
+    
     private String ipServer;
     private int portServer;
+    private final JTextField clientTextField;
+    private JButton clientSendButton;
+    private JTextArea clientInOutArea;
     
     private InputStream inputStream;
     private OutputStream outputStream;
     
-    public ClientRunnable(String ip, int port) {
+    public ClientRunnable(String ip, int port, JTextField textField, JButton sendButton, JTextArea inOutArea) {
         ipServer = ip;
         portServer = port;
+        clientTextField = textField;
+        clientSendButton = sendButton;
+        clientInOutArea = inOutArea;
+        
+        clientSendButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (e.getSource() == clientSendButton) sendMessage(textField.getText());
+            }
+        });
+        
     }
     
     @Override
@@ -40,18 +53,36 @@ public class ClientRunnable implements Runnable {
             
             System.out.println("CONNESSIONE APERTA");
             
+            byte[] clientBuffer = new byte[2048];
+            int bytesRead;
+
+            while ((bytesRead = inputStream.read(clientBuffer)) != 1) {
+                String clientMessage =  new String(clientBuffer, 0, bytesRead);
+                clientInOutArea.append("\n" + clientMessage);
+            }
+            
         } catch (Exception ex) {
             System.out.println("CONNESSIONE FALLITA\n\n" + ex);
-        } finally {
-            try {
-                if (clientSocket != null && !clientSocket.isClosed()) {
-                    clientSocket.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
         
+        
+    }
+    
+    public void sendMessage(String message) {
+        try {
+            String newMessage = "Client: " + message;
+            if (message.length() != 0) {
+                outputStream.write(newMessage.getBytes());
+                clientInOutArea.append("\n" + newMessage);
+                outputStream.flush();
+                System.out.println("MESSAGGIO INVIATO");
+            } else {
+                System.out.println("MESSAGGIO VUOTO");
+            }
+            
+        } catch (IOException ex) {
+            System.out.println("MESSAGGIO FALLITO AD INVIARE " + ex);
+        }
         
     }
     

@@ -6,6 +6,8 @@ package esercitazione_chatsicura;
 
 import java.net.*;
 import java.io.*;
+import java.awt.event.*;
+import javax.swing.*;
 
 /**
  *
@@ -15,16 +17,28 @@ public class ServerRunnable implements Runnable {
 
     private ServerSocket serverSocket;
     private Socket clientSocket;
-    
-    private String ipServer;
+
     private int portServer;
+    private final JTextField serverTextField;
+    private JButton serverSendButton;
+    private JTextArea serverInOutArea;
     
     private InputStream inputStream;
     private OutputStream outputStream;
     
     
-    public ServerRunnable(int port) {
+    public ServerRunnable(int port, JTextField textField, JButton sendButton, JTextArea inOutArea) {
         portServer = port;
+        serverTextField = textField;
+        serverSendButton = sendButton;
+        serverInOutArea = inOutArea;
+        
+        serverSendButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (e.getSource() == serverSendButton) sendMessage(textField.getText());
+            }
+        });
+        
     }
     
     @Override
@@ -45,30 +59,32 @@ public class ServerRunnable implements Runnable {
 
             while ((bytesRead = inputStream.read(serverBuffer)) != 1) {
                 String clientMessage =  new String(serverBuffer, 0, bytesRead);
-                print("Client: " + clientMessage);
-                
-                String serverMessage = "Server: ok";
-                outputStream.write(serverMessage.getBytes());
-                outputStream.flush();
+                serverInOutArea.append("\n" + clientMessage);
             }
             
         } catch (Exception ex) {
-            
-        } finally {
-            try {
-                if (clientSocket != null && !clientSocket.isClosed()) {
-                    clientSocket.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            System.out.println("CONNESSIONE FALLITA\n\n" + ex);
         }
         
         
     }
     
-    private void print(String message) {
-        System.out.println(message);
+    public void sendMessage(String message) {
+        try {
+            String newMessage = "Server: " + message;
+            if (message.length() != 0) {
+                outputStream.write(newMessage.getBytes());
+                serverInOutArea.append("\n" + newMessage);
+                outputStream.flush();
+                System.out.println("MESSAGGIO INVIATO");
+            } else {
+                System.out.println("MESSAGGIO VUOTO");
+            }
+            
+        } catch (IOException ex) {
+            System.out.println("MESSAGGIO FALLITO AD INVIARE " + ex);
+        }
+        
     }
     
 }

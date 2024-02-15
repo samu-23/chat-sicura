@@ -97,8 +97,9 @@ public class InterfacciaServer extends JFrame implements ActionListener {
         
         if (e.getSource() == openConnectionButton) {
             int port = Integer.parseInt(portTextField.getText());
-            Thread serverThread = new Thread(new ServerRunnable(port));
+            Thread serverThread = new Thread(new ServerRunnable(port, textInputField, sendTextButton, textInOutArea));
             serverThread.start();
+            
         }
         
     }

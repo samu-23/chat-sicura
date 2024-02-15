@@ -81,7 +81,7 @@ public class InterfacciaClient extends JFrame implements ActionListener {
         if (e.getSource() == connectButton) {
             String ip = ipTextField.getText();
             int port = Integer.parseInt(portTextField.getText());
-            Thread clientThread = new Thread(new ClientRunnable(ip, port));
+            Thread clientThread = new Thread(new ClientRunnable(ip, port, textInputField, sendTextButton, textInOutArea));
             clientThread.start();
         }
         
