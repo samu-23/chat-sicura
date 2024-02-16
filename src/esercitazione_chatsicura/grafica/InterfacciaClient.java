@@ -24,17 +24,21 @@ public class InterfacciaClient extends JFrame implements ActionListener {
     private JTextField portTextField = new JTextField();
     private JButton connectButton = new JButton("Connettiti");
     
+    private JButton debugButton = new JButton("Debug");
+    
     private JPanel centralPanel = new JPanel();
     private JTextArea textInOutArea = new JTextArea();
     private JPanel bottomPanel = new JPanel();
     private JTextField textInputField = new JTextField(); 
     private JButton sendTextButton = new JButton("→");
     
+    public InterfacciaDebugClient idc;
+    
     public InterfacciaClient(String title) {
         
         setResizable(false);
         setTitle(title);
-        setBounds(200, 0, 700, 700);
+        setBounds(200, 0, 900, 700);
         
         // Impostazioni pannelli e componenti
         ipPanel.setBackground(Color.LIGHT_GRAY);
@@ -51,6 +55,7 @@ public class InterfacciaClient extends JFrame implements ActionListener {
         textInOutArea.setBackground(Color.decode("#E8E8E8"));
 
         connectButton.addActionListener(this);
+        debugButton.addActionListener(this);
         
         // Aggiunta pannelli e componenti
         
@@ -61,6 +66,7 @@ public class InterfacciaClient extends JFrame implements ActionListener {
         ipPanel.add(portTextField);
         ipPanel.add(Box.createRigidArea(new Dimension(20,0)));
         ipPanel.add(connectButton);
+        ipPanel.add(debugButton);
         
         centralPanel.add(textInOutArea);
 
@@ -79,10 +85,19 @@ public class InterfacciaClient extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         
         if (e.getSource() == connectButton) {
-            String ip = ipTextField.getText();
-            int port = Integer.parseInt(portTextField.getText());
-            Thread clientThread = new Thread(new ClientRunnable(ip, port, textInputField, sendTextButton, textInOutArea));
-            clientThread.start();
+            try {
+                String ip = ipTextField.getText();
+                int port = Integer.parseInt(portTextField.getText());
+                Thread clientThread = new Thread(new ClientRunnable(ip, port, textInputField, sendTextButton, textInOutArea, this));
+                clientThread.start();
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Controlla i campi per la connessione!");
+            }
+           
+        }
+        
+        if (e.getSource() == debugButton) {
+            idc = new InterfacciaDebugClient("Debug Client");
         }
         
     }

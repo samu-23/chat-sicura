@@ -4,6 +4,8 @@
  */
 package esercitazione_chatsicura;
 
+import esercitazione_chatsicura.grafica.InterfacciaClient;
+import esercitazione_chatsicura.grafica.InterfacciaServer;
 import java.io.*;
 import java.net.*;
 import java.awt.event.*;
@@ -17,21 +19,35 @@ public class ClientRunnable implements Runnable {
 
     private Socket clientSocket;
     
+    private InterfacciaClient clientInterf;
+    
     private String ipServer;
     private int portServer;
     private final JTextField clientTextField;
     private JButton clientSendButton;
     private JTextArea clientInOutArea;
     
+    private int count = 0;
+    
+    private DiffieHellman DH;
+    private int B;
+    
+    private int a;
+    private int p;
+    private int key;
+    
     private InputStream inputStream;
     private OutputStream outputStream;
     
-    public ClientRunnable(String ip, int port, JTextField textField, JButton sendButton, JTextArea inOutArea) {
+    public ClientRunnable(String ip, int port, JTextField textField, JButton sendButton, JTextArea inOutArea, InterfacciaClient clientInterf) {
         ipServer = ip;
         portServer = port;
         clientTextField = textField;
         clientSendButton = sendButton;
         clientInOutArea = inOutArea;
+        this.clientInterf = clientInterf;
+        
+        DH = new DiffieHellman(new File(System.getProperty("user.home") + "/Desktop/primeNumbers.txt"));
         
         clientSendButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -50,35 +66,72 @@ public class ClientRunnable implements Runnable {
             
             inputStream = clientSocket.getInputStream();
             outputStream = clientSocket.getOutputStream();
+            DataInputStream dataInputStream = new DataInputStream(clientSocket.getInputStream());
+            DataOutputStream dataOutputStream = new DataOutputStream(clientSocket.getOutputStream());
             
             System.out.println("CONNESSIONE APERTA");
             
             byte[] clientBuffer = new byte[2048];
             int bytesRead;
 
+            int[] parms = DH.clientValues();
+            
+            System.out.println(parms.toString());
+            
+            dataOutputStream.writeInt(parms[0]);
+            dataOutputStream.flush();
+            dataOutputStream.writeInt(parms[1]);
+            dataOutputStream.flush();
+            dataOutputStream.writeInt(parms[2]);
+            dataOutputStream.flush();
+
+            a = parms[3];
+            p = parms[0];
+            
+            int[] allValues = new int[5];
+            allValues[0] = parms[0];
+            allValues[1] = parms[1];
+            allValues[2] = parms[2];
+            allValues[3] = parms[3];
+            allValues[4] = key;
+            
+            B = dataInputStream.readInt();
+            key = (int) Math.pow(B, a) % p;
+            
+            if (clientInterf.idc != null) clientInterf.idc.setParams(allValues);
+            
             while ((bytesRead = inputStream.read(clientBuffer)) != 1) {
+
+                
                 String clientMessage =  new String(clientBuffer, 0, bytesRead);
-                clientInOutArea.append("\n" + clientMessage);
+                String decryptedMessage = CrittografiaCesare.decrittaMessaggio(clientMessage, key);
+                clientInOutArea.append("\n" + decryptedMessage);
+                break;
+                
+                 
             }
             
         } catch (Exception ex) {
-            System.out.println("CONNESSIONE FALLITA\n\n" + ex);
+            JOptionPane.showMessageDialog(null, "Connessione interrotta!\n");
+            ex.printStackTrace();
         }
-        
-        
     }
     
     public void sendMessage(String message) {
         try {
-            String newMessage = "Client: " + message;
+
+            String encryptedMessage = CrittografiaCesare.crittaMessaggio(message, key);
+            System.out.println(encryptedMessage);
             if (message.length() != 0) {
-                outputStream.write(newMessage.getBytes());
-                clientInOutArea.append("\n" + newMessage);
+                outputStream.write(encryptedMessage.getBytes());
+                System.out.println(key);
+                clientInOutArea.append("\n" + message);
                 outputStream.flush();
                 System.out.println("MESSAGGIO INVIATO");
             } else {
                 System.out.println("MESSAGGIO VUOTO");
-            }
+            }  
+
             
         } catch (IOException ex) {
             System.out.println("MESSAGGIO FALLITO AD INVIARE " + ex);

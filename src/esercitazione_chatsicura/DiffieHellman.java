@@ -38,13 +38,13 @@ public class DiffieHellman {
         return lines;
     }
     
-    public int clientValues() {
+    public int[] clientValues() {
         
         /*
         * p - Pubblico
         * g - Pubblico
         * a - Privato
-        * KA - Privato
+        * A - Privato
         */
         
         Random randomManager = new Random();
@@ -55,36 +55,44 @@ public class DiffieHellman {
         int g = randomManager.nextInt(2, randomPrimeNumber - 1);
         a = randomManager.nextInt(2, randomPrimeNumber - 1);
         
-        int KA = (int) (Math.pow(g, a) % primeNumber);
+        int A = (int) (Math.pow(g, a) % primeNumber);
         
-        return KA;
+        int[] result = new int[4];
+        result[0] = primeNumber;
+        result[1] = g;
+        result[2] = A;
+        result[3] = a;
+        
+        return result;
         
     }
     
-    public int serverValues(int KA) {
+    public int[] serverValues(int A, int g, int p) {
         
         /*
         * p - Pubblico
+        * g - Pubblico
         * b - Privato
-        * KA - Privato
-        * KB - Pubblico
+        * A - Privato
+        * B - Pubblico
         */
+        
+        int[] values = new int[2];
         
         Random randomManager = new Random();
         
         int randomPrimeNumber = randomManager.nextInt(0, primeNumbersList.size());
-        int p = Integer.parseInt(primeNumbersList.get(randomPrimeNumber));
+        primeNumber = Integer.parseInt(primeNumbersList.get(randomPrimeNumber));
         
         int b = randomManager.nextInt(2, randomPrimeNumber - 1);
         
-        int KB = (int) (Math.pow(KA, b) % p);
+        int B = (int) Math.pow(g, b) % p;
         
-        return KB;
+        values[0] = B;
+        values[1] = b;
         
-    }
-    
-    public int clientEndValues(int KB) {
-        return (int) (Math.pow(KB, a) % primeNumber); 
+        return values;
+        
     }
     
 }

@@ -9,7 +9,6 @@ import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;  
 import java.net.*;
-import java.io.*;
 
 /**
  *
@@ -27,11 +26,15 @@ public class InterfacciaServer extends JFrame implements ActionListener {
     private JTextField portTextField = new JTextField();
     private JButton openConnectionButton = new JButton("Apri connessione");
     
+    private JButton debugButton = new JButton("Debug");
+    
     private JPanel centralPanel = new JPanel();
     private JTextArea textInOutArea = new JTextArea();
     private JPanel bottomPanel = new JPanel();
     private JTextField textInputField = new JTextField(); 
     private JButton sendTextButton = new JButton("→");
+    
+    public InterfacciaDebugServer idb;
     
     public String ipAddress;
     
@@ -39,7 +42,7 @@ public class InterfacciaServer extends JFrame implements ActionListener {
         
         setResizable(false);
         setTitle(title);
-        setBounds(200, 0, 700, 700);
+        setBounds(200, 0, 900, 700);
         
         // Impostazioni pannelli e componenti
         ipPanel.setBackground(Color.LIGHT_GRAY);
@@ -57,6 +60,7 @@ public class InterfacciaServer extends JFrame implements ActionListener {
         
         ipGetButton.addActionListener(this);
         openConnectionButton.addActionListener(this);
+        debugButton.addActionListener(this);
         
         // Aggiunta pannelli e componenti
         
@@ -69,6 +73,7 @@ public class InterfacciaServer extends JFrame implements ActionListener {
         ipPanel.add(portTextField);
         ipPanel.add(Box.createRigidArea(new Dimension(20,0)));
         ipPanel.add(openConnectionButton);
+        ipPanel.add(debugButton);
         
         centralPanel.add(textInOutArea);
 
@@ -96,9 +101,19 @@ public class InterfacciaServer extends JFrame implements ActionListener {
         }
         
         if (e.getSource() == openConnectionButton) {
-            int port = Integer.parseInt(portTextField.getText());
-            Thread serverThread = new Thread(new ServerRunnable(port, textInputField, sendTextButton, textInOutArea));
-            serverThread.start();
+            
+            try {
+                int port = Integer.parseInt(portTextField.getText());
+                Thread serverThread = new Thread(new ServerRunnable(port, textInputField, sendTextButton, textInOutArea, this));
+                serverThread.start();
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Controlla i campi per la connessione!");
+            }   
+        }
+        
+        if (e.getSource() == debugButton) {
+            
+            idb = new InterfacciaDebugServer("Debug Server");
             
         }
         
