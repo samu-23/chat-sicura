@@ -3,8 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/acer/Desktop/School/5IA/Sistemi/Git_Java/Esercitazione_ChatSicura/src/esercitazione_chatsicura/DiffieHellman.java</file>
-            <file>file:/C:/Users/acer/Desktop/School/5IA/Sistemi/Git_Java/Esercitazione_ChatSicura/src/esercitazione_chatsicura/Esercitazione_ChatSicura.java</file>
+            <file>file:/C:/Users/User/Desktop/Esercitazio/src/esercitazione_chatsicura/grafica/InterfacciaDebugServer.java</file>
+            <file>file:/C:/Users/User/Desktop/Esercitazio/src/esercitazione_chatsicura/ClientRunnable.java</file>
+            <file>file:/C:/Users/User/Desktop/Esercitazio/src/esercitazione_chatsicura/grafica/InterfacciaClient.java</file>
+            <file>file:/C:/Users/User/Desktop/Esercitazio/src/esercitazione_chatsicura/grafica/InterfacciaDebugClient.java</file>
+            <file>file:/C:/Users/User/Desktop/Esercitazio/src/esercitazione_chatsicura/grafica/InterfacciaServer.java</file>
+            <file>file:/C:/Users/User/Desktop/Esercitazio/src/esercitazione_chatsicura/ServerRunnable.java</file>
+            <file>file:/C:/Users/User/Desktop/Esercitazio/src/esercitazione_chatsicura/DiffieHellman.java</file>
         </group>
     </open-files>
 </project-private>

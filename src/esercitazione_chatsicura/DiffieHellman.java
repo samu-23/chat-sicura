@@ -6,6 +6,7 @@ package esercitazione_chatsicura;
 
 import java.io.*;
 import java.util.*;
+import javax.swing.JOptionPane;
 /**
  *
  * @author acer
@@ -19,7 +20,7 @@ public class DiffieHellman {
     
     public DiffieHellman(File primeNumbersFile) {
         primeNumbers = primeNumbersFile;
-        primeNumbersList = loadFile();
+        primeNumbersList = loadFile(); 
     }
     
     private List<String> loadFile() {
@@ -32,7 +33,8 @@ public class DiffieHellman {
                 lines.add(line);
             }
         } catch (IOException e) {
-            System.out.println("Couldn't load line " + lineNow +" into List<String>:\n" + e.getMessage());
+            JOptionPane.showMessageDialog(null, "File primeNumbers.txt non trovato!\nControllare che si trovi nel Desktop", "ERRORE: File non trovato", JOptionPane.ERROR_MESSAGE);
+            return null;
         }
 
         return lines;

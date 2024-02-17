@@ -29,8 +29,6 @@ public class ServerRunnable implements Runnable {
     private InputStream inputStream;
     private OutputStream outputStream;
     
-    private int count = 1;
-    
     private DiffieHellman DH;
     private int p;
     private int g;
@@ -62,7 +60,7 @@ public class ServerRunnable implements Runnable {
             
             serverSocket = new ServerSocket(portServer);
             
-            System.out.println("CONNESSIONE APERTA");
+            JOptionPane.showMessageDialog(null, "Connessione stabilita!\n");
             
             clientSocket = serverSocket.accept();
             
@@ -73,8 +71,6 @@ public class ServerRunnable implements Runnable {
             
             byte[] serverBuffer = new byte[2048];
             int bytesRead;
-
-            System.out.println(count);
             
             p = dataInputStream.readInt();
             g = dataInputStream.readInt();
@@ -86,12 +82,13 @@ public class ServerRunnable implements Runnable {
             int b = values[1];
             key = (int) Math.pow(A, b) % p;
             
-            int[] allValues = new int[5];
-            allValues[0] = p;
-            allValues[1] = g;
-            allValues[2] = A;
-            allValues[3] = b;
-            allValues[4] = key;
+            int[] allValues = new int[6];
+            allValues[0] = p; // p
+            allValues[1] = g; // g
+            allValues[2] = A; // A
+            allValues[3] = B; // B
+            allValues[4] = b; // b
+            allValues[5] = key;
             
             if (serverIntrf.idb != null) serverIntrf.idb.setParams(allValues);
             
@@ -99,12 +96,22 @@ public class ServerRunnable implements Runnable {
 
                 String clientMessage =  new String(serverBuffer, 0, bytesRead);
                 String decryptedMessage = CrittografiaCesare.decrittaMessaggio(clientMessage, key);
-                serverInOutArea.append("\n" + decryptedMessage);
+                serverInOutArea.append("\nClient: " + decryptedMessage + "| Encrypted: " + clientMessage);
                
             }
             
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Connessione interrotta:\n" + ex);
+            if (ex instanceof NullPointerException) {
+                JOptionPane.showMessageDialog(null, "File primeNumbers.txt non trovato!\nConnessione interrotta!", "ERRORE: File non trovato", JOptionPane.ERROR_MESSAGE);
+                try {
+                    serverSocket.close();
+                } catch (IOException ioex) {
+                    ioex.printStackTrace();
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Connessione interrotta:\n" + ex);
+            }
+            
         }
         
         
@@ -115,15 +122,15 @@ public class ServerRunnable implements Runnable {
             String encryptedMessage = CrittografiaCesare.crittaMessaggio(message, key);
             if (message.length() != 0) {
                 outputStream.write(encryptedMessage.getBytes());
-                serverInOutArea.append("\n" + message);
+                serverInOutArea.append("\nServer: " + message + "| Encrypted: " + encryptedMessage);
                 outputStream.flush();
-                System.out.println("MESSAGGIO INVIATO");
+                JOptionPane.showMessageDialog(null, "Messaggio inviato");
             } else {
-                System.out.println("MESSAGGIO VUOTO");
+                JOptionPane.showMessageDialog(null, "Il messaggio inserito è vuoto!");
             }
             
         } catch (IOException ex) {
-            System.out.println("MESSAGGIO FALLITO AD INVIARE " + ex);
+            JOptionPane.showMessageDialog(null, "Message has not been sent:\n\n" + ex);
         }
         
     }

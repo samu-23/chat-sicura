@@ -69,7 +69,7 @@ public class ClientRunnable implements Runnable {
             DataInputStream dataInputStream = new DataInputStream(clientSocket.getInputStream());
             DataOutputStream dataOutputStream = new DataOutputStream(clientSocket.getOutputStream());
             
-            System.out.println("CONNESSIONE APERTA");
+            JOptionPane.showMessageDialog(null, "Connessione stabilita!\n");
             
             byte[] clientBuffer = new byte[2048];
             int bytesRead;
@@ -88,15 +88,17 @@ public class ClientRunnable implements Runnable {
             a = parms[3];
             p = parms[0];
             
-            int[] allValues = new int[5];
-            allValues[0] = parms[0];
-            allValues[1] = parms[1];
-            allValues[2] = parms[2];
-            allValues[3] = parms[3];
-            allValues[4] = key;
-            
+            int[] allValues = new int[6];
+            allValues[0] = parms[0]; // p
+            allValues[1] = parms[1]; // g
+            allValues[2] = parms[2]; // A
+            allValues[3] = parms[3]; // a
+             
             B = dataInputStream.readInt();
             key = (int) Math.pow(B, a) % p;
+            
+            allValues[4] = B;
+            allValues[5] = key; // key
             
             if (clientInterf.idc != null) clientInterf.idc.setParams(allValues);
             
@@ -105,15 +107,23 @@ public class ClientRunnable implements Runnable {
                 
                 String clientMessage =  new String(clientBuffer, 0, bytesRead);
                 String decryptedMessage = CrittografiaCesare.decrittaMessaggio(clientMessage, key);
-                clientInOutArea.append("\n" + decryptedMessage);
+                clientInOutArea.append("\nServer: " + decryptedMessage + "| Encrypted: " + clientMessage);
                 break;
                 
                  
             }
             
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Connessione interrotta!\n");
-            ex.printStackTrace();
+            if (ex instanceof NullPointerException) {
+                JOptionPane.showMessageDialog(null, "File primeNumbers.txt non trovato!\nConnessione interrotta!", "ERRORE: File non trovato", JOptionPane.ERROR_MESSAGE);
+                try {
+                    clientSocket.close();
+                } catch (IOException ioex) {
+                    ioex.printStackTrace();
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Connessione interrotta:\n" + ex);
+            }
         }
     }
     
@@ -124,17 +134,16 @@ public class ClientRunnable implements Runnable {
             System.out.println(encryptedMessage);
             if (message.length() != 0) {
                 outputStream.write(encryptedMessage.getBytes());
-                System.out.println(key);
-                clientInOutArea.append("\n" + message);
+                clientInOutArea.append("\nClient: " + message + "| Encrypted: " + encryptedMessage);
                 outputStream.flush();
-                System.out.println("MESSAGGIO INVIATO");
+                JOptionPane.showMessageDialog(null, "Messaggio inviato");
             } else {
-                System.out.println("MESSAGGIO VUOTO");
+                JOptionPane.showMessageDialog(null, "Il messaggio inserito è vuoto!");
             }  
 
             
         } catch (IOException ex) {
-            System.out.println("MESSAGGIO FALLITO AD INVIARE " + ex);
+            JOptionPane.showMessageDialog(null, "Message has not been sent:\n\n" + ex);
         }
         
     }

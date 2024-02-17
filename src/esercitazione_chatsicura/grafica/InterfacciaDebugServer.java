@@ -20,14 +20,16 @@ public class InterfacciaDebugServer extends JFrame implements ActionListener {
     private JLabel titleLabel = new JLabel("Debug Server");
     
     private JPanel centralPanel = new JPanel();
-    private JLabel aLabel = new JLabel("a:");
-    private JTextField aTF = new JTextField();
+    private JLabel bLabel = new JLabel("a:");
+    private JTextField bTF = new JTextField();
     private JLabel gLabel = new JLabel("g:");
     private JTextField gTF = new JTextField();
     private JLabel pLabel = new JLabel("p:");
     private JTextField pTF = new JTextField();
     private JLabel BLabel = new JLabel("B: ");
     private JTextField BTF = new JTextField();
+    private JLabel ALabel = new JLabel("A: ");
+    private JTextField ATF = new JTextField();
     private JLabel KeyLabel = new JLabel("Key: ");
     private JTextField KeyTF = new JTextField();
     
@@ -44,27 +46,31 @@ public class InterfacciaDebugServer extends JFrame implements ActionListener {
         
         northPanel.setBackground(Color.LIGHT_GRAY);
         
-        aTF.setEditable(false);
+        bTF.setEditable(false);
         gTF.setEditable(false);
         pTF.setEditable(false);
         BTF.setEditable(false);
+        ATF.setEditable(false);
         KeyTF.setEditable(false);
         
-        aTF.setPreferredSize(new Dimension(30,20));
+        bTF.setPreferredSize(new Dimension(30,20));
         gTF.setPreferredSize(new Dimension(30,20));
         pTF.setPreferredSize(new Dimension(30,20));
         BTF.setPreferredSize(new Dimension(30,20));
+        ATF.setPreferredSize(new Dimension(30,20));
         KeyTF.setPreferredSize(new Dimension(30,20));
         
         northPanel.add(titleLabel);
-        centralPanel.add(aLabel);
-        centralPanel.add(aTF);
+        centralPanel.add(bLabel);
+        centralPanel.add(bTF);
         centralPanel.add(gLabel);
         centralPanel.add(gTF);
         centralPanel.add(pLabel);
         centralPanel.add(pTF);
         centralPanel.add(BLabel);
         centralPanel.add(BTF);
+        centralPanel.add(ALabel);
+        centralPanel.add(ATF);
         centralPanel.add(KeyLabel);
         centralPanel.add(KeyTF);
         
@@ -75,12 +81,20 @@ public class InterfacciaDebugServer extends JFrame implements ActionListener {
     
     public void setParams(int[] params) {
         this.params = params;
-        // 1 - Numero primo, 2 - Generatore, 3 - A, 4 - b
-        aTF.setText("" + params[0]);
+        /*
+            allValues[0] = p; // p
+            allValues[1] = g; // g
+            allValues[2] = A; // A
+            allValues[3] = B; // B
+            allValues[4] = b; // b
+            allValues[5] = key;
+        */
+        pTF.setText("" + params[0]);
         gTF.setText("" + params[1]);
-        pTF.setText("" + params[2]);
+        ATF.setText("" + params[2]);
         BTF.setText("" + params[3]);
-        KeyTF.setText("" + params[4]);
+        bTF.setText("" + params[4]);
+        KeyTF.setText("" + params[5]);
     }
     
     @Override
